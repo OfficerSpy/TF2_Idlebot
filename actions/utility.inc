@@ -169,14 +169,14 @@ void InitGamedata()
 	
 	//int CBaseAnimating::LookupBone( const char *szName )
 	StartPrepSDKCall(SDKCall_Entity);
-	PrepSDKCall_SetSignature(SDKLibrary_Server, "\x55\x8B\xEC\x56\x8B\xF1\x80\xBE\x41\x03\x00\x00\x00\x75\x2A\x83\xBE\x6C\x04\x00\x00\x00\x75\x2A\xE8\x2A\x2A\x2A\x2A\x85\xC0\x74\x2A\x8B\xCE\xE8\x2A\x2A\x2A\x2A\x8B\x86\x6C\x04\x00\x00\x85\xC0\x74\x2A\x83\x38\x00\x74\x2A\xFF\x75\x08\x50\xE8\x2A\x2A\x2A\x2A\x83\xC4\x08\x5E", 68);
+	PrepSDKCall_SetSignature(SDKLibrary_Server, "\x55\x8B\xEC\x56\x8B\xF1\x80\xBE\x69\x03\x00\x00\x00\x75\x2A\x83\xBE\x98\x04\x00\x00\x00\x75\x2A\xE8\x2A\x2A\x2A\x2A\x85\xC0\x74\x2A\x8B\xCE\xE8\x2A\x2A\x2A\x2A\x8B\x86\x98\x04\x00\x00\x85\xC0\x74\x2A\x83\x38\x00\x74\x2A\xFF\x75\x08\x50\xE8\x2A\x2A\x2A\x2A\x83\xC4\x08\x5E", 68);
 	PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
 	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 	if ((g_hLookupBone = EndPrepSDKCall()) == INVALID_HANDLE) SetFailState("Failed to create SDKCall for CBaseAnimating::LookupBone signature!");
 	
 	//void CBaseAnimating::GetBonePosition ( int iBone, Vector &origin, QAngle &angles )
 	StartPrepSDKCall(SDKCall_Entity);
-	PrepSDKCall_SetSignature(SDKLibrary_Server, "\x55\x8B\xEC\x83\xEC\x30\x56\x8B\xF1\x80\xBE\x41\x03\x00\x00\x00", 16);
+	PrepSDKCall_SetSignature(SDKLibrary_Server, "\x55\x8B\xEC\x83\xEC\x30\x56\x8B\xF1\x80\xBE\x69\x03\x00\x00\x00", 16);
 	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef, _, VENCODE_FLAG_COPYBACK);
 	PrepSDKCall_AddParameter(SDKType_QAngle, SDKPass_ByRef, _, VENCODE_FLAG_COPYBACK);
@@ -1947,7 +1947,7 @@ stock void AvoidPlayers(int client, float &forwardmove, float &sidemove)
 
 //There's a skill check in here too right at the start, but we don't care about it
 //if ( actor + 2411) > 1 ) // m_iSkill 
-stock bool AvoidBumpingEnemies(int actor, float[3] out)
+stock bool AvoidBumpingEnemies(int actor, float out[3])
 {
 	if(TF2_GetPlayerClass(actor) != TFClass_Spy)
 		return false;
@@ -2253,35 +2253,6 @@ stock bool UTIL_IsVisibleToTeam(float vecPos[3], int team)
     }
     
     return false;
-}
-
-stock bool IsThreatAimingTowardMe(int entity, int looker, float flDot)
-{
-	float vecToLooker[3];
-	MakeVectorFromPoints(GetAbsOrigin(entity), GetAbsOrigin(looker), vecToLooker);
-	
-	float flLength = GetVectorLength(vecToLooker, true);
-	
-	NormalizeVector(vecToLooker, vecToLooker);
-	
-	float vForward[3];
-	if ( IsValidClientIndex(looker) )
-	{
-		EyeVectors(entity, vForward, NULL_VECTOR, NULL_VECTOR);
-	}
-	else
-	{
-		if ( !HasEntProp(looker, Prop_Send, "m_hEnemy") || (v10 * flLength) >= 1100.0 )
-			return false;
-		
-		//CObjectSentrygun::GetTurretAngles()
-		AngleVectors(GetTurretAngles(CObjectSentryGun), vForward);
-	}
-	
-	if ( GetVectorDotProduct(vForward, vecToLooker) > flDot )
-		return true;
-		
-	return false;
 }
 
 stock char[] GetClassName(int entity)

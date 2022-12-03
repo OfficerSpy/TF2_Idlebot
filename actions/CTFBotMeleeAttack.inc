@@ -3,11 +3,6 @@ const float tf_bot_melee_attack_abandon_range = 500.0;
 	
 float m_flAbandonRange[MAXPLAYERS + 1];
 
-stock bool CTFBotMeleeAttack_IsPossible(int actor)
-{
-	return CTFBotMeleeAttack_SelectRandomReachableEnemy(actor) != -1 && IsValidEntity(GetPlayerWeaponSlot(actor, 2));
-}
-
 bool CTFBotMeleeAttack_OnStart(int actor, float abandon_range = -1.0)
 {
 	if (abandon_range < 0.0) {

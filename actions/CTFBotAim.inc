@@ -59,27 +59,27 @@ methodmap BotAim
 	}
 	public void Reset()
 	{
-		m_angLastEyeAngles[this] = NULL_VECTOR;
-		m_vecAimTarget[this] = NULL_VECTOR;
-		m_vecTargetVelocity[this] = NULL_VECTOR;
-		m_vecLastEyeVectors[this] = NULL_VECTOR;
+		m_angLastEyeAngles[view_as<int>(this)] = NULL_VECTOR;
+		m_vecAimTarget[view_as<int>(this)] = NULL_VECTOR;
+		m_vecTargetVelocity[view_as<int>(this)] = NULL_VECTOR;
+		m_vecLastEyeVectors[view_as<int>(this)] = NULL_VECTOR;
 		
-		m_ctAimTracking[this] = -1.0;
-		m_ctAimDuration[this] = -1.0;
-		m_ctResettle[this] = -1.0;
+		m_ctAimTracking[view_as<int>(this)] = -1.0;
+		m_ctAimDuration[view_as<int>(this)] = -1.0;
+		m_ctResettle[view_as<int>(this)] = -1.0;
 		
-		m_itAimStart[this] = -1.0;
-		m_itHeadSteady[this] = -1.0;
+		m_itAimStart[view_as<int>(this)] = -1.0;
+		m_itHeadSteady[view_as<int>(this)] = -1.0;
 		
-		m_hAimTarget[this] = -1;
-		m_iAimPriority[this] = BORING;
+		m_hAimTarget[view_as<int>(this)] = -1;
+		m_iAimPriority[view_as<int>(this)] = BORING;
 		
-		m_bHeadOnTarget[this] = false;
-		m_bSightedIn[this] = false;
+		m_bHeadOnTarget[view_as<int>(this)] = false;
+		m_bSightedIn[view_as<int>(this)] = false;
 		
-		m_ctFire[this] = -1.0;
-		m_ctAltFire[this] = -1.0;
-		m_ctReload[this] = -1.0;
+		m_ctFire[view_as<int>(this)] = -1.0;
+		m_ctAltFire[view_as<int>(this)] = -1.0;
+		m_ctReload[view_as<int>(this)] = -1.0;
 	}	
 	property int index
 	{
@@ -90,19 +90,19 @@ methodmap BotAim
 	}	
 	public bool IsHeadAimingOnTarget()
 	{
-		return m_bHeadOnTarget[this];
+		return m_bHeadOnTarget[view_as<int>(this)];
 	}	
 	public bool IsHeadSteady()
 	{
-		return view_as<bool>(m_itHeadSteady[this] != -1);
+		return view_as<bool>(m_itHeadSteady[view_as<int>(this)] != -1);
 	}	
 	public float GetHeadSteadyDuration()
 	{
-		if (m_itHeadSteady[this] == -1) {
+		if (m_itHeadSteady[view_as<int>(this)] == -1) {
 			return 0.0;
 		}
 		
-		return GetGameTime() - m_itHeadSteady[this];
+		return GetGameTime() - m_itHeadSteady[view_as<int>(this)];
 	}	
 	public float GetMaxHeadAngularVelocity()
 	{
@@ -111,24 +111,24 @@ methodmap BotAim
 	
 	public void ReleaseFireButton()
 	{
-		m_ctFire[this] = 0.0;
+		m_ctFire[view_as<int>(this)] = 0.0;
 	}
 	public void ReleaseAltFireButton()
 	{
-		m_ctAltFire[this] = 0.0;
+		m_ctAltFire[view_as<int>(this)] = 0.0;
 	}
 	
 	public void PressFireButton(float duration = 0.1)
 	{
-		m_ctFire[this] = GetGameTime() + duration;
+		m_ctFire[view_as<int>(this)] = GetGameTime() + duration;
 	}	
 	public void PressAltFireButton(float duration = 0.1)
 	{
-		m_ctAltFire[this] = GetGameTime() + duration;
+		m_ctAltFire[view_as<int>(this)] = GetGameTime() + duration;
 	}
 	public void PressReloadButton(float duration = 0.1)
 	{
-		m_ctReload[this] = GetGameTime() + duration;
+		m_ctReload[view_as<int>(this)] = GetGameTime() + duration;
 	}
 	
 	public void Upkeep()
@@ -146,38 +146,38 @@ methodmap BotAim
 		GetEntPropVector(this.index, Prop_Send, "m_vecPunchAngle", punch_angle);
 		AddVectors(eye_ang, punch_angle, eye_ang);
 	
-		if (FloatAbs(float(RoundToFloor(AngleDiff(eye_ang[0], m_angLastEyeAngles[this][0])))) > (frametime * g_hHeadSteadyRate.FloatValue)
-		 || FloatAbs(float(RoundToFloor(AngleDiff(eye_ang[1], m_angLastEyeAngles[this][1])))) > (frametime * g_hHeadSteadyRate.FloatValue))
+		if (FloatAbs(float(RoundToFloor(AngleDiff(eye_ang[0], m_angLastEyeAngles[view_as<int>(this)][0])))) > (frametime * g_hHeadSteadyRate.FloatValue)
+		 || FloatAbs(float(RoundToFloor(AngleDiff(eye_ang[1], m_angLastEyeAngles[view_as<int>(this)][1])))) > (frametime * g_hHeadSteadyRate.FloatValue))
 		{
-			m_itHeadSteady[this] = -1.0;	//this->m_itHeadSteady.Invalidate();
+			m_itHeadSteady[view_as<int>(this)] = -1.0;	//this->m_itHeadSteady.Invalidate();
 		} 
 		else 
 		{
-			if (m_itHeadSteady[this] == -1) 
+			if (m_itHeadSteady[view_as<int>(this)] == -1) 
 			{
-				m_itHeadSteady[this] = GetGameTime();
+				m_itHeadSteady[view_as<int>(this)] = GetGameTime();
 			}
 		}
 		
-		m_angLastEyeAngles[this] = eye_ang;
+		m_angLastEyeAngles[view_as<int>(this)] = eye_ang;
 		
-		if (m_bSightedIn[this] && m_ctAimDuration[this] <= GetGameTime()) {
+		if (m_bSightedIn[view_as<int>(this)] && m_ctAimDuration[view_as<int>(this)] <= GetGameTime()) {
 			return;
 		}
 		
 		float eye_vec[3];
 		GetAngleVectors(eye_ang, eye_vec, NULL_VECTOR, NULL_VECTOR);
 		
-		if(ArcCosine(GetVectorDotProduct(m_vecLastEyeVectors[this], eye_vec)) * (180.0 / FLOAT_PI) > g_hHeadResettleAngle.FloatValue)
+		if(ArcCosine(GetVectorDotProduct(m_vecLastEyeVectors[view_as<int>(this)], eye_vec)) * (180.0 / FLOAT_PI) > g_hHeadResettleAngle.FloatValue)
 		{
-			m_ctResettle[this] = GetGameTime() + g_hHeadResettleTime.FloatValue * GetRandomFloat(0.9, 1.1);
-			m_vecLastEyeVectors[this] = eye_vec;
+			m_ctResettle[view_as<int>(this)] = GetGameTime() + g_hHeadResettleTime.FloatValue * GetRandomFloat(0.9, 1.1);
+			m_vecLastEyeVectors[view_as<int>(this)] = eye_vec;
 		}
-		else if (m_ctResettle[this] == -1 || m_ctResettle[this] <= GetGameTime())
+		else if (m_ctResettle[view_as<int>(this)] == -1 || m_ctResettle[view_as<int>(this)] <= GetGameTime())
 		{
-			m_ctResettle[this] = -1.0;
+			m_ctResettle[view_as<int>(this)] = -1.0;
 			
-			int target_ent = m_hAimTarget[this];
+			int target_ent = m_hAimTarget[view_as<int>(this)];
 						
 			if (target_ent > 0 && target_ent <= MaxClients && IsClientInGame(target_ent)) 
 			{
@@ -332,10 +332,10 @@ methodmap BotAim
 					target_point = WorldSpaceCenter(target_ent);
 				}
 				
-				if (m_ctAimTracking[this] <= GetGameTime()) 
+				if (m_ctAimTracking[view_as<int>(this)] <= GetGameTime()) 
 				{
 					float delta[3]
-					SubtractVectors(target_point, m_vecAimTarget[this], delta);
+					SubtractVectors(target_point, m_vecAimTarget[view_as<int>(this)], delta);
 					
 					float flLeadTime = 0.0;
 					delta[0] += (flLeadTime * target_velocity[0]);
@@ -346,22 +346,22 @@ methodmap BotAim
 					float scale = GetVectorLength(delta) / track_interval;
 					NormalizeVector(delta, delta);
 					
-					m_vecTargetVelocity[this][0] = (scale * delta[0]) + target_velocity[0];
-					m_vecTargetVelocity[this][1] = (scale * delta[1]) + target_velocity[1];
-					m_vecTargetVelocity[this][2] = (scale * delta[2]) + target_velocity[2];
+					m_vecTargetVelocity[view_as<int>(this)][0] = (scale * delta[0]) + target_velocity[0];
+					m_vecTargetVelocity[view_as<int>(this)][1] = (scale * delta[1]) + target_velocity[1];
+					m_vecTargetVelocity[view_as<int>(this)][2] = (scale * delta[2]) + target_velocity[2];
 					
-					m_ctAimTracking[this] = GetGameTime() + (track_interval * GetRandomFloat(0.8, 1.2));
+					m_ctAimTracking[view_as<int>(this)] = GetGameTime() + (track_interval * GetRandomFloat(0.8, 1.2));
 				}
 				
-				m_vecAimTarget[this][0] += frametime * m_vecTargetVelocity[this][0];
-				m_vecAimTarget[this][1] += frametime * m_vecTargetVelocity[this][1];
-				m_vecAimTarget[this][2] += frametime * m_vecTargetVelocity[this][2];
+				m_vecAimTarget[view_as<int>(this)][0] += frametime * m_vecTargetVelocity[view_as<int>(this)][0];
+				m_vecAimTarget[view_as<int>(this)][1] += frametime * m_vecTargetVelocity[view_as<int>(this)][1];
+				m_vecAimTarget[view_as<int>(this)][2] += frametime * m_vecTargetVelocity[view_as<int>(this)][2];
 			}
 		}
 	
 		float eye_to_target[3], myEyePosition[3];
 		GetClientEyePosition(this.index, myEyePosition);
-		SubtractVectors(m_vecAimTarget[this], myEyePosition, eye_to_target);
+		SubtractVectors(m_vecAimTarget[view_as<int>(this)], myEyePosition, eye_to_target);
 		
 		NormalizeVector(eye_to_target, eye_to_target);
 		
@@ -373,15 +373,15 @@ methodmap BotAim
 		/* must be within ~11.5 degrees to be considered on target */
 		if (cos_error <= 0.98)
 		{
-			m_bHeadOnTarget[this] = false;
+			m_bHeadOnTarget[view_as<int>(this)] = false;
 		}
 		else 
 		{
-			m_bHeadOnTarget[this] = true;
+			m_bHeadOnTarget[view_as<int>(this)] = true;
 			
-			if (!m_bSightedIn[this]) 
+			if (!m_bSightedIn[view_as<int>(this)]) 
 			{
-				m_bSightedIn[this] = true;
+				m_bSightedIn[view_as<int>(this)] = true;
 				
 				if (g_hDebug.BoolValue) 
 				{
@@ -399,9 +399,9 @@ methodmap BotAim
 			max_angvel *= Sine((3.14 / 2.0) * (1.0 + ((-49.0 / 15.0) * (cos_error - 0.7))));
 		}
 	
-		if(m_itAimStart[this] != -1 && (GetGameTime() - m_itAimStart[this] < 0.25))
+		if(m_itAimStart[view_as<int>(this)] != -1 && (GetGameTime() - m_itAimStart[view_as<int>(this)] < 0.25))
 		{
-			max_angvel *= 4.0 * (GetGameTime() - m_itAimStart[this]);
+			max_angvel *= 4.0 * (GetGameTime() - m_itAimStart[view_as<int>(this)]);
 		}
 		
 		float new_eye_angle[3];
@@ -424,7 +424,7 @@ methodmap BotAim
 			duration = 0.1;
 		}
 		
-		if (priority == m_iAimPriority[this] && (!this.IsHeadSteady() || this.GetHeadSteadyDuration() < g_hHeadAimSettleDuration.FloatValue)) 
+		if (priority == m_iAimPriority[view_as<int>(this)] && (!this.IsHeadSteady() || this.GetHeadSteadyDuration() < g_hHeadAimSettleDuration.FloatValue)) 
 		{
 			if (g_hDebug.BoolValue) 
 			{
@@ -433,18 +433,18 @@ methodmap BotAim
 			}
 		}
 		
-		if (priority > m_iAimPriority[this] || m_ctAimDuration[this] <= GetGameTime()) 
+		if (priority > m_iAimPriority[view_as<int>(this)] || m_ctAimDuration[view_as<int>(this)] <= GetGameTime()) 
 		{
-			m_ctAimDuration[this] = GetGameTime() + duration;
-			m_iAimPriority[this] = priority;
+			m_ctAimDuration[view_as<int>(this)] = GetGameTime() + duration;
+			m_iAimPriority[view_as<int>(this)] = priority;
 			
 			/* only update our aim if the target vector changed significantly */
-			if (GetVectorDistance(vec, m_vecAimTarget[this]) >= 1.0)
+			if (GetVectorDistance(vec, m_vecAimTarget[view_as<int>(this)]) >= 1.0)
 			{
-				m_hAimTarget[this] = -1;
-				m_vecAimTarget[this] = vec;
-				m_itAimStart[this] = GetGameTime();
-				m_bHeadOnTarget[this] = false;
+				m_hAimTarget[view_as<int>(this)] = -1;
+				m_vecAimTarget[view_as<int>(this)] = vec;
+				m_itAimStart[view_as<int>(this)] = GetGameTime();
+				m_bHeadOnTarget[view_as<int>(this)] = false;
 				
 				if (g_hDebug.BoolValue) 
 				{
@@ -478,7 +478,7 @@ methodmap BotAim
 			duration = 0.1;
 		}
 		
-		if (priority == m_iAimPriority[this] && (!this.IsHeadSteady() || this.GetHeadSteadyDuration() < g_hHeadAimSettleDuration.FloatValue)) 
+		if (priority == m_iAimPriority[view_as<int>(this)] && (!this.IsHeadSteady() || this.GetHeadSteadyDuration() < g_hHeadAimSettleDuration.FloatValue)) 
 		{
 			if (g_hDebug.BoolValue) 
 			{
@@ -487,21 +487,21 @@ methodmap BotAim
 			}
 		}
 		
-		if (priority > m_iAimPriority[this] || m_ctAimDuration[this] <= GetGameTime()) 
+		if (priority > m_iAimPriority[view_as<int>(this)] || m_ctAimDuration[view_as<int>(this)] <= GetGameTime()) 
 		{
-			m_ctAimDuration[this] = GetGameTime() + duration;
-			m_iAimPriority[this] = priority;
+			m_ctAimDuration[view_as<int>(this)] = GetGameTime() + duration;
+			m_iAimPriority[view_as<int>(this)] = priority;
 			
 			/* only update our aim if the target entity changed */
-			int prev_target = m_hAimTarget[this];
+			int prev_target = m_hAimTarget[view_as<int>(this)];
 			if (prev_target == -1 || ent != prev_target) 
 			{
-				m_hAimTarget[this] = ent;
-				m_itAimStart[this] = GetGameTime();
-				m_bHeadOnTarget[this] = false;
+				m_hAimTarget[view_as<int>(this)] = ent;
+				m_itAimStart[view_as<int>(this)] = GetGameTime();
+				m_bHeadOnTarget[view_as<int>(this)] = false;
 
-				m_itHeadSteady[this] = -1.0;
-				m_bSightedIn[this] = false;
+				m_itHeadSteady[view_as<int>(this)] = -1.0;
+				m_bSightedIn[view_as<int>(this)] = false;
 
 				if (g_hDebug.BoolValue) 
 				{
@@ -559,11 +559,11 @@ methodmap BotAim
 			}
 		}
 		
-		int threat = m_hAimTarget[this]; //this->GetVisionInterface()->GetPrimaryKnownThreat(false);
+		int threat = m_hAimTarget[view_as<int>(this)]; //this->GetVisionInterface()->GetPrimaryKnownThreat(false);
 	//	if (threat = nullptr || threat->GetEntity() == nullptr || !threat->IsVisibleRecently()) 
 		if (threat <= 0 || threat > MaxClients || !IsClientInGame(threat) || !IsPlayerAlive(threat) || IsInvulnerable(threat)) 
 		{
-			m_hAimTarget[this] = -1;
+			m_hAimTarget[view_as<int>(this)] = -1;
 			
 			//Unscope because target isnt valid.
 			//if (IsSniperRifle(this.index) && TF2_IsPlayerInCondition(this.index, TFCond_Zoomed)/* && !GetEntProp(this.index, Prop_Send, "m_bRageDraining")*/)
